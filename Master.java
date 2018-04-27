@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /*
  * To Do List
@@ -14,38 +15,52 @@ public class Master {
 	private int companyId;
 	private int employees;
 	
-	private static int numberOfCompanies = 0;
-	
+	//DOES NOT WORK! > Doesn't view the database, every creation IS the first company...
+	//Should add itself to database too.
 	public Master(String company){
-		this.companyId = newCompanyId();
-		numberOfCompanies++;//last line of constructor.
+		
+		this.companyId = newCompanyId(DBAccess.getCompanies());
+		this.company = company;
 	}
 	
 	//Used when creating a new company. Assigns this new company the next available ID.
-	private static int newCompanyId() {
-		return numberOfCompanies + 1;
+	private static int newCompanyId(ArrayList<String> companies) {
+		int value;
+		
+		try {
+			value = Integer.parseInt(companies.get(companies.size()-1)) + 1;
+		} catch (IndexOutOfBoundsException e) {
+			value = 1;
+			System.out.println("First Company");
+		}
+		
+		return value;
 	}
 	
 	//Create new employee OR manager of a company.
-	public void newUser(String name, String position, boolean isManager) {
-		if (isManager) {
-			new Master.Manager(
-				name,
-				position,
-				this.company
-			);
-		} else {
-			new Master.Employee(
-				name,
-				position,
-				this.company
-			);
-		}
+	public void newUser(String firstName, String lastName, String position, boolean isManager) {
+		new Master.Employee(
+			firstName,
+			lastName,
+			position,
+			this.company,
+			isManager
+		);
+	}
+	
+	//Returns company ID.
+	public int getId() {
+		return this.companyId;
 	}
 	
 	//Returns number of employees in a company.
 	public int employeeCount() {
 		return employees;
+	}
+		
+	//Returns the company name.
+	public String getName() {
+		return this.company;
 	}
 	
 	/*
@@ -65,31 +80,27 @@ public class Master {
 	private class Employee {
 		private int employeeId;
 		
-		private String name;
+		private String firstName;
+		private String lastName;
 		private String position;
 		private String company;
 		
-		Employee(String name, String position, String company) {
+		private boolean isManager;
+		
+		//Add to database after creation
+		Employee(String firstName, String lastName, String position, String company, boolean isManager) {
 			this.employeeId = employees + 1;
 			
-			this.name = name;
+			this.firstName = firstName;
+			this.lastName = lastName;
 			this.position = position;
+			
+			this.isManager = isManager;
 			
 			employees++;
 		}
 	}
-
-	
-	
-	
-	
-	
-	private class Manager extends Employee {
-		private boolean manager;
-		Manager(String name, String position, String company) {
-			super(name, position, company);
-			this.manager = true;
-		}
-	}
 	
 }
+
+

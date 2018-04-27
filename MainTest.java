@@ -1,17 +1,34 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+
+/*
+ * To do list
+ * 
+ * 
+ * Allow instance of CompanyAccess to only change 1 table
+ * 
+ * Master newUser() should take an instance of CompanyAccess and only be able to add a user for matching companyId.
+ * 
+ */
 
 public class MainTest {
 
 	public static void main(String[] args) {
-		Master test = new Master("Cartridge of Inc.");
 		
-		System.out.println(test.employeeCount());
-		test.newUser("Matthew Wolfe", "CEO", true);
+		//Connection must be made before a new company can be added.
+		DBAccess companyTable = new DBAccess("C:/Users/Student.A219-16/Desktop/matthew_stuff/sqlite/ems");
+		Master company = new Master("Cartridge of Inc.");
+	
+		company.newUser("Matthew", "Wolfe", "CEO", true);
+		company.newUser("Sam", "Baker", "COO", false);
 		
-		System.out.println(test.employeeCount());
-		test.newUser("Sam Baker", "COO", false);
+		companyTable.newCompanyTable(company.getId());
 		
-		System.out.println(test.employeeCount());
-
+		DBAccess.disconnect();
+		
+		
 	}
+	
+	
 
 }
