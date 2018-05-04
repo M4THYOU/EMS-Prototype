@@ -12,45 +12,41 @@ import java.util.Iterator;
 public class Master {
 	
 	private String company;
-	private int companyId;
 	private int employees;
 	
 	//DOES NOT WORK! > Doesn't view the database, every creation IS the first company...
 	//Should add itself to database too.
 	public Master(String company){
+		ArrayList<String> companies = DBAccess.getCompanies();//This is the only coupled code in this module.
 		
-		this.companyId = newCompanyId(DBAccess.getCompanies());
+		boolean isNew = true;
+		for (String name:companies) {
+			if (name.equals(company)) {
+				System.out.println("Accessing existing company, [" + company + "].");
+				isNew = false;
+			}
+		}
+		
+		if (isNew) {//Add to database.
+			DBAccess.newCompanyTable(company);
+		}
+		
 		this.company = company;
 	}
 	
-	//Used when creating a new company. Assigns this new company the next available ID.
-	private static int newCompanyId(ArrayList<String> companies) {
-		int value;
-		
-		try {
-			value = Integer.parseInt(companies.get(companies.size()-1)) + 1;
-		} catch (IndexOutOfBoundsException e) {
-			value = 1;
-			System.out.println("First Company");
-		}
-		
-		return value;
-	}
-	
 	//Create new employee OR manager of a company.
-	public void newUser(String firstName, String lastName, String position, boolean isManager) {
-		new Master.Employee(
+	public Employee newUser(String firstName, String lastName, String position, boolean isManager) {
+		Employee newEmp = new Master.Employee(
 			firstName,
 			lastName,
 			position,
 			this.company,
 			isManager
 		);
-	}
-	
-	//Returns company ID.
-	public int getId() {
-		return this.companyId;
+		
+		this.employees++;
+		
+		return newEmp;
 	}
 	
 	//Returns number of employees in a company.
@@ -71,6 +67,11 @@ public class Master {
 	}
 	*///Gonna set up database first.
 	
+	//public Employee getEmployee(int employeeId) {}
+	
+	public void userToDB(Employee user, CompanyAccess company) {
+		company.insertUser(user.employeeId, user.firstName, user.lastName, user.position, user.isManager);
+	}
 	
 	
 	
@@ -95,10 +96,16 @@ public class Master {
 			this.lastName = lastName;
 			this.position = position;
 			
-			this.isManager = isManager;
+			this.company = company;
 			
-			employees++;
+			this.isManager = isManager;
 		}
+		
+		/*
+		public Employee getEmployee(employeeId) {
+			return 
+		}
+		*///Set up db.
 	}
 	
 }

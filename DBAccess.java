@@ -14,10 +14,6 @@ public class DBAccess {
 
 	static Connection conn = null;
 	
-	DBAccess(String db_file_location) {
-		connect(db_file_location);
-	}
-	
 	
 	
 	
@@ -62,10 +58,18 @@ public class DBAccess {
 	
 	
 	//Add a new company to the database.
-	public void newCompanyTable(int companyId) {
+	public static void newCompanyTable(String name) {
+		
+		ArrayList<String> companies = DBAccess.getCompanies();
+		
+		for (String whichCompany:companies) {
+			if (whichCompany.equals(name)) {
+				throw new IllegalArgumentException("A company with that name already exists.");
+			}
+		}
 		
 		//WATCH OUT FOR SQL INJECTION!!!!!!!!!!!!!!!!!
-		String sql = "CREATE TABLE IF NOT EXISTS [" + companyId + "] (\n"
+		String sql = "CREATE TABLE IF NOT EXISTS [" + name + "] (\n"
 				+ " id integer PRIMARY KEY,\n"
 				+ " firstName varchar(255) NOT NULL,\n"
 				+ " lastName varchar(255) NOT NULL,\n"
@@ -75,7 +79,7 @@ public class DBAccess {
 		
 		try (Statement stmt = conn.createStatement()) {
 			stmt.execute(sql);
-			System.out.println(companyId + " successfully inserted.");
+			System.out.println(name + " successfully inserted.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
@@ -84,22 +88,22 @@ public class DBAccess {
 		
 	}
 	
-	//Returns ArrayList of every company in the database.
+	//Returns an arraylist of every company in the database.
 	public static ArrayList<String> getCompanies() {
-		ArrayList<String> tables = new ArrayList<String>();
+		ArrayList<String> companies = new ArrayList<String>();
 		
 		try {
 			DatabaseMetaData meta = conn.getMetaData();
 			ResultSet results = meta.getTables(null, null, "%", null);
 			while (results.next()) {
-				tables.add(results.getString(3));
+					companies.add(results.getString(3));
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		return tables;
+		return companies;
 		
 	}
 	
