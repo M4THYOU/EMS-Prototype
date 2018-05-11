@@ -1,3 +1,4 @@
+package com.jambalayasystems.main;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -8,21 +9,44 @@ import java.util.Iterator;
  * 
  */
 
-
+/** Represents a company; contains {@link Employee} subclass.
+ * 
+ * @author Matthew Wolfe
+ * @version 1.0
+ * @since 1.0
+ *
+ */
 public class Master {
 	
+	/**
+	 * The name of the company.
+	 */
 	private String company;
+	
+	/**
+	 * The number of employees in the company.
+	 */
 	private int employees;
 	
-	//DOES NOT WORK! > Doesn't view the database, every creation IS the first company...
-	//Should add itself to database too.
+	/** Initializes a company instance with the given String, company, as the company name.
+	 * <p>
+	 * The database is then scanned to see if a table with the same name as the given company already exists. If it does,<br>
+	 * the method will <i>not</i> add another company to the database. If it does not, a new company will be added to the<br>
+	 * database.
+	 * <p>
+	 * The instance's company name is set to the given company. The instance's employees is set to the number of<br>
+	 * employees in an existing company table, or 0 if it is a new company.
+	 * 
+	 * 
+	 * @param company - a string representing the company name.
+	 */
 	public Master(String company){
-		ArrayList<String> companies = DBAccess.getCompanies();//This is the only coupled code in this module.
+		ArrayList<String> companies = DBAccess.getCompanies();
 		
 		boolean isNew = true;
 		for (String name:companies) {
 			if (name.equals(company)) {
-				System.out.println("Accessing existing company, [" + company + "].");
+				System.out.println("Accessing existing company, [" + company + "].\n");
 				isNew = false;
 			}
 		}
@@ -31,10 +55,24 @@ public class Master {
 			DBAccess.newCompanyTable(company);
 		}
 		
+		
+		this.employees = DBAccess.countEmployees(company);
 		this.company = company;
 	}
 	
-	//Create new employee OR manager of a company.
+	/**This method is to be used as the first argument in {@link #userToDB(Employee, CompanyAccess)}.
+	 * <p>
+	 * Creates a new employee of the instance company. Can also create a manager, if specified.
+	 * <p>
+	 * First, the {@link Master.Employee} constructor is called using the given arguments. The instance's employees is<br>
+	 * then incremented.
+	 * 
+	 * @param firstName - the employee's first name.
+	 * @param lastName - the employee's last name.
+	 * @param position - the employee's job title at the company.
+	 * @param isManager - whether or not the employee is a manager.
+	 * @return The newly created {@link Employee} object.
+	 */
 	public Employee newUser(String firstName, String lastName, String position, boolean isManager) {
 		Employee newEmp = new Master.Employee(
 			firstName,
@@ -49,12 +87,16 @@ public class Master {
 		return newEmp;
 	}
 	
-	//Returns number of employees in a company.
+	/**Returns the number of employees in the company.
+	 * @return the number of employees in the company.
+	 */
 	public int employeeCount() {
 		return employees;
 	}
 		
-	//Returns the company name.
+	/**Returns the company name.
+	 * @return the company name.
+	 */
 	public String getName() {
 		return this.company;
 	}
@@ -69,6 +111,13 @@ public class Master {
 	
 	//public Employee getEmployee(int employeeId) {}
 	
+	/**Inserts the given user into the database.
+	 * 
+	 * Calls {@link CompanyAccess#insertUser(int, String, String, String, boolean)}.
+	 * 
+	 * @param user - the return of {@link #newUser(String, String, String, boolean)}
+	 * @param company - The access point to a specific company's table in the database.
+	 */
 	public void userToDB(Employee user, CompanyAccess company) {
 		company.insertUser(user.employeeId, user.firstName, user.lastName, user.position, user.isManager);
 	}
@@ -76,19 +125,40 @@ public class Master {
 	
 	
 	
-	
-	
+	/**Represents an employee; subclass of {@link Master}.
+	 * 
+	 * @author Matthew Wolfe
+	 * @version 1.0
+	 * @since 1.0
+	 *
+	 */
 	private class Employee {
+		
+		/**The identification number of the employee.*/
 		private int employeeId;
 		
+		/**The employee's first name.*/
 		private String firstName;
+		/**The employee's last name.*/
 		private String lastName;
+		/**The employee's job title.*/
 		private String position;
+		/**The company the employee works at.*/
 		private String company;
 		
+		/**Whether or not the employee is also a manager.*/
 		private boolean isManager;
 		
-		//Add to database after creation
+		/**Initializes an employee of the parent company.
+		 * <p>
+		 * Gets called by {@link Master#newUser(String, String, String, boolean)}.
+		 * 
+		 * @param firstName - the employee's first name.
+		 * @param lastName - the employee's last name.
+		 * @param position - the employee's job title.
+		 * @param company - the name of the company the employee works at.
+		 * @param isManager - whether or not the employee is also a manager.
+		 */
 		Employee(String firstName, String lastName, String position, String company, boolean isManager) {
 			this.employeeId = employees + 1;
 			

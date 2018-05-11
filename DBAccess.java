@@ -1,3 +1,4 @@
+package com.jambalayasystems.main;
 //Connecting to DB and general needs.
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,7 +27,24 @@ public class DBAccess {
 			String url = "jdbc:sqlite:" + db_file_location;
 			
 			conn = DriverManager.getConnection(url);
-			System.out.println("Connected to " + url);
+			System.out.println("Connected to " + url + "\n");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+		}
+		return conn;
+	}
+	
+	//Connects to database FROM CompanyAccess.
+	static Connection connect(String db_file_location, String company) {
+		conn = null;
+		
+		try {
+			String url = "jdbc:sqlite:" + db_file_location;
+			
+			conn = DriverManager.getConnection(url);
+			System.out.println("COMPANY ACCESS - [" + company + "] Connected to " + url + "\n");
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -40,9 +58,9 @@ public class DBAccess {
 		try {
 			if (conn != null) {
 				conn.close();
-				System.out.println("Disconnected.");
+				System.out.println("Disconnected.\n");
 			} else {
-				System.out.println("No database to disconnect from.");
+				System.out.println("No database to disconnect from.\n");
 			}
 			
 		} catch (SQLException e) {
@@ -79,11 +97,11 @@ public class DBAccess {
 		
 		try (Statement stmt = conn.createStatement()) {
 			stmt.execute(sql);
-			System.out.println(name + " successfully inserted.");
+			System.out.println(name + " successfully inserted.\n");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
-			System.out.println("No connection found.");
+			System.out.println("No connection found.\n");
 		}
 		
 	}
@@ -104,6 +122,23 @@ public class DBAccess {
 		}
 		
 		return companies;
+		
+	}
+	
+	public static int countEmployees(String company) {
+		String sql = "SELECT count(*) FROM [" + company + "]";
+		
+		try(Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql)) {
+			
+			return rs.getInt(1);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		
+		
 		
 	}
 	
