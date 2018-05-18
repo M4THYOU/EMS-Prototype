@@ -18,14 +18,10 @@ import java.util.Iterator;
  */
 public class Master {
 	
-	/**
-	 * The name of the company.
-	 */
+	/**The name of the company.*/
 	private String company;
 	
-	/**
-	 * The number of employees in the company.
-	 */
+	/**The number of employees in the company.*/
 	private int employees;
 	
 	/** Initializes a company instance with the given String, company, as the company name.
@@ -101,16 +97,6 @@ public class Master {
 		return this.company;
 	}
 	
-	/*
-	//Returns array of employees in a company. Option of managers, employees, or both.
-	public Employee[] getUsers() {
-		ArrayList<Employee> users = new ArrayList<Employee>();
-		
-	}
-	*///Gonna set up database first.
-	
-	//public Employee getEmployee(int employeeId) {}
-	
 	/**Inserts the given user into the database.
 	 * 
 	 * Calls {@link CompanyAccess#insertUser(int, String, String, String, boolean)}.
@@ -171,11 +157,11 @@ public class Master {
 			this.isManager = isManager;
 		}
 		
-		/*
-		public Employee getEmployee(employeeId) {
-			return 
+
+		public String getEmployee(int employeeId, CompanyAccess company) {
+			return;
 		}
-		*///Set up db.
+
 	}
 	
 }

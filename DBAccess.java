@@ -11,8 +11,16 @@ import java.sql.ResultSet;
 
 import java.util.ArrayList;
 
+/**Represents the system's administrator access to the database. Total free access.
+ * 
+ * @author Matthew Wolfe
+ * @version 1.0
+ * @since 1.0
+ *
+ */
 public class DBAccess {
 
+	/**The current database connection*/
 	static Connection conn = null;
 	
 	
@@ -20,6 +28,13 @@ public class DBAccess {
 	
 	//STATIC METHODS
 	//Connects to database.
+	/** Create initial connection to the database and sets the static property {@link #conn}.
+	 * <p>
+	 * Gets the string location of the database. and prefixes it with "jdbc:sqlite:". Then calls {@link DriverManager#getConnection(String)}.
+	 * 
+	 * @param db_file_location - the absolute location of the database file.
+	 * @return The newly created {@link Connection} instance.
+	 */
 	static Connection connect(String db_file_location) {
 		conn = null;
 		
@@ -36,7 +51,15 @@ public class DBAccess {
 		return conn;
 	}
 	
-	//Connects to database FROM CompanyAccess.
+	/**An overloaded {@link #connect(String)} method. For use by {@link CompanyAccess}.
+	 * <p>
+	 * Gets the string location of the database. and prefixes it with "jdbc:sqlite:". Then calls {@link DriverManager#getConnection(String)}.
+	 * <br>Additionally, this method prints out which company this connection has been made for.
+	 * 
+	 * @param db_file_location - the absolute location of the database file.
+	 * @param company - the name of the company making the connection.
+	 * @return The newly created {@link Connection} instance.
+	 */
 	static Connection connect(String db_file_location, String company) {
 		conn = null;
 		
@@ -53,7 +76,7 @@ public class DBAccess {
 		return conn;
 	}
 	
-	//Disconnects from database.
+	/**Disconnects from the database if a connection exists.*/
 	static public void disconnect() {
 		try {
 			if (conn != null) {
@@ -75,7 +98,23 @@ public class DBAccess {
 	
 	
 	
-	//Add a new company to the database.
+	/**Add a new company to the database.
+	 * <p>
+	 * First, this method creates a new {@link ArrayList} from {@link DBAccess#getCompanies()} which holds all companies in the database.<br>
+	 * The ArrayList is then iterated over to see if the new company name already matches any existing one. If so, an <br>
+	 * {@link IllegalArgumentException} is thrown. If there is no matching company, the method continues.
+	 * <p>
+	 * A new company table is added to the SQLite database. The columns are as follows:<br>
+	 * <b>id</b> - the primary key; identifies each individual employee. Type: integer<br>
+	 * <b>firstName</b> - the employee's first name. Type: varchar(255)<br>
+	 * <b>lastName</b> - the employee's last name. Type: varchar(255)<br>
+	 * <b>position</b> - the employee's job titel at the company. Type: varchar(255)<br>
+	 * <b>isManager</b> - whether or not the employee is a manager. Type: char(1), represents a boolean.<br>
+	 * <p>
+	 * The statement is then executed with {@link Statement#execute(String)}.
+	 * 
+	 * @param name - the String name of the company.
+	 */
 	public static void newCompanyTable(String name) {
 		
 		ArrayList<String> companies = DBAccess.getCompanies();
@@ -106,7 +145,13 @@ public class DBAccess {
 		
 	}
 	
-	//Returns an arraylist of every company in the database.
+	/**Returns an {@link ArrayList} of every company in the database.
+	 * <p>
+	 * First, this method creates an empty ArrayList of Strings. The database metadata is then accessed, which contains each table name.<br>
+	 * Each table name, which is also a company name, is added to the ArrayList.
+	 * 
+	 * @return The ArrayList of Strings containing all of the company names in the database.
+	 */
 	public static ArrayList<String> getCompanies() {
 		ArrayList<String> companies = new ArrayList<String>();
 		
@@ -125,6 +170,11 @@ public class DBAccess {
 		
 	}
 	
+	/**Counts the number of employees entered into a company's table.
+	 * 
+	 * @param company - the String name of the company.
+	 * @return An int representing the number of employees in a company's table.
+	 */
 	public static int countEmployees(String company) {
 		String sql = "SELECT count(*) FROM [" + company + "]";
 		

@@ -5,12 +5,13 @@ import java.util.Iterator;
 /*
  * To do list
  * 
- * Add javadoc stuff to every class and method.
+ * * * *Add javadoc stuff to every class and method. ---------> Do this after every method is completed.* * * *
  * 
- * Finish Master's getUsers() and getEmployee(int id) methods
- * Add option for fullName search to getEmployee().
+ * THIS REQUIRES A GENRAL USE METHOD IN COMPANY ACCESS WHICH RETURNS INDIVIDUAL EMPLOYEES (as a string).
+ * Finish Master's nameSearch(string name), positionSearch(string position), and getEmployee(int id) methods
+ *  * Combine all of these into one advancedSearch(string query, boolean isManager) -> isManager is a "filter".
  * 
- * Create a method to add multiple employees at once.
+ * Create a method to add multiple employees at once. Take input from CSV file. Auto generated ID's or predetermined.
  * 
  */
 
