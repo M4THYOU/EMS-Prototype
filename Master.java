@@ -108,6 +108,10 @@ public class Master {
 		company.insertUser(user.employeeId, user.firstName, user.lastName, user.position, user.isManager);
 	}
 	
+	public ArrayList<String> getEmployee(String data, String isManager, CompanyAccess company) {
+		return company.getEmployee(data, isManager);
+	}
+	
 	
 	
 	
@@ -157,11 +161,6 @@ public class Master {
 			this.isManager = isManager;
 		}
 		
-
-		public String getEmployee(int employeeId, CompanyAccess company) {
-			return;
-		}
-
 	}
 	
 }

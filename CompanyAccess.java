@@ -83,7 +83,7 @@ public class CompanyAccess {
 		
 		
 		//Check if user already exists
-		ArrayList<String> data = getEmployees("fullName,position");
+		ArrayList<String> data = getAllEmployees("fullName,position");
 		
 		dataLoop: for (String user:data) {
 			String[] nameAndPosition = user.split(",");
@@ -143,6 +143,11 @@ public class CompanyAccess {
 		
 	}
 	
+	//THIS SHOULD AUTO GENERATE IDS
+	public void insertUsers(String csvFileLocation) {
+		
+	}
+	
 	/**Returns an ArrayList of Strings with information about every employee in the company. The exact data type of this information<br>
 	 * depends on the <i>data</i> specified.
 	 * <p>
@@ -165,7 +170,7 @@ public class CompanyAccess {
 	 * </ul>
 	 * @return The ArrayList of Strings containing the specified data of all users.
 	 */
-	private ArrayList<String> getEmployees(String data) {
+	private ArrayList<String> getAllEmployees(String dataType) {
 		String sql = "SELECT * FROM [" + this.company + "]";
 		
 		ArrayList<String> rows = new ArrayList<String>();
@@ -175,21 +180,21 @@ public class CompanyAccess {
 			
 			while (rs.next()) {
 				
-				if (data.equals("id")) {
+				if (dataType.equals("id")) {
 					rows.add(Integer.toString(rs.getInt(1)));
-				} else if (data.equals("fullName")) {
+				} else if (dataType.equals("fullName")) {
 					String firstName = rs.getString(2);
 					String lastName = rs.getString(3);
 					String fullName = firstName + " " + lastName;
 					
 					rows.add(fullName);
-				} else if (data.equals("firstName")) {
+				} else if (dataType.equals("firstName")) {
 					rows.add(rs.getString(2));
-				} else if (data.equals("lastName")) {
+				} else if (dataType.equals("lastName")) {
 					rows.add(rs.getString(3));
-				} else if (data.equals("position")) {
+				} else if (dataType.equals("position")) {
 					rows.add(rs.getString(4));
-				} else if (data.equals("fullName,position")) {
+				} else if (dataType.equals("fullName,position")) {
 					String firstName = rs.getString(2);
 					String lastName = rs.getString(3);
 					String fullName = firstName + " " + lastName;
@@ -198,7 +203,7 @@ public class CompanyAccess {
 					String fullNamePosition = fullName + "," + position;
 					
 					rows.add(fullNamePosition);
-				} else if (data.equals("isManager")) {
+				} else if (dataType.equals("isManager")) {
 					int rawIsManager = rs.getByte(5);
 					
 					boolean isManager;
@@ -209,11 +214,11 @@ public class CompanyAccess {
 					}
 
 					rows.add(Boolean.toString(isManager));
-				} else if (data.equals("all")) {
+				} else if (dataType.equals("all")) {
 					String all = rs.getInt(1) + "," + rs.getString(2) + "," + rs.getString(3) + "," + rs.getString(4) + "," + rs.getByte(5);
 					rows.add(all);
 				} else {
-					throw new IllegalArgumentException("Invalid data type, " + "\""+ data + "\".");
+					throw new IllegalArgumentException("Invalid data type, " + "\""+ dataType + "\".");
 				}				
 			}
 			
@@ -225,46 +230,175 @@ public class CompanyAccess {
 	}
 	
 	//TO BE USED BY getEmployee(String data, String searchType) for searching the database. ***OVERLOAD ME FOR EACH TYPE OF SEARCH***
-	private void searchDB(int id) {
-		String sql = "SELECT "fr;fefr
+	//id is a unique identifier, so return type does not have to be an ArrayList as there can only be one matching id.
+	private String searchDB(int id) {
+		String sql = "SELECT * FROM [" + this.company + "]";
+		
+		ArrayList<String> rows = new ArrayList<String>();
+		try (Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql)) {
+				
+			while (rs.next()) {	
+			
+				String all = rs.getInt(1) + "," + rs.getString(2) + "," + rs.getString(3) + "," + rs.getString(4) + "," + rs.getByte(5);
+				rows.add(all);			
+			}
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		for (String data:rows) {
+			
+			//Convert 'all' string into just the id, as an int.
+			String[] dataSet = data.split(",");
+			int currentId = Integer.parseInt(dataSet[0]);
+			
+			if (id == currentId) {
+				return data;
+			}
+		}
+		
+		//Will only get this far if no match is found.
+		return "No Match Found.";
 	}
 	
-	public String getEmployee(String data, String searchType) {
+	//not id search
+	private ArrayList<String> searchDB(String namePosition, String isManager, String searchType) {
 		/*
-		 * Valid Args for data:
-		 * * "id"
+		 * Valid Args for searchType:
 		 * * "fullName"
 		 * * "firstName"
 		 * * "lastName"
 		 * * "position"
 		 * * "fullName,position"
-		 * * "all"
+		 * 
+		 * Valid Args for isManager:
+		 * * "true"
+		 * * "false"
+		 * * "null"
 		 */
+		String sql = "SELECT * FROM [" + this.company + "]";
 		
-		if (searchType.equals("id")) {
-			int id = Integer.parseInt(data);
-			
-		} else if (searchType.equals("fullName")) {
-			//
-		} else if (searchType.equals("firstName")) {
-			//
-		} else if (searchType.equals("lastName")) {
-			//
-		} else if (searchType.equals("position")) {
-			//
-		} else if (searchType.equals("fullName,position")) {
-			//
-		} else if (searchType.equals("all")) {
-			//
-		} else {
-			throw new IllegalArgumentException("Invalid searchType type, " + "\""+ searchType + "\".");
+		ArrayList<String> allRows = new ArrayList<String>();
+		try (Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql)) {
+				
+			while (rs.next()) {	
+				String all = rs.getInt(1) + "," + rs.getString(2) + "," + rs.getString(3) + "," + rs.getString(4) + "," + rs.getByte(5);
+				allRows.add(all);			
+			}
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		
+		ArrayList<String> searchResults = new ArrayList<String>();
+		boolean matchFound = false;
+		for (String data:allRows) {
+			
+			String[] dataSet = data.split(",");
+			
+			//Convert all potential matches and search query to lower case to make sure there is no case sensitivity.
+			String searchQuery = namePosition.toLowerCase();
+			String currentFirstName = dataSet[1].toLowerCase();
+			String currentLastName = dataSet[2].toLowerCase();
+			String currentPosition = dataSet[3].toLowerCase();
+			int currentIsManagerInt = Integer.parseInt(dataSet[4]);
+			
+			boolean currentIsManager = ((currentIsManagerInt == 1) ? true:false);
+			
+			String options;
+			switch (searchType) {
+			
+			case "fullName":
+				options = currentFirstName + " " + currentLastName;
+				break;
+				
+			case "firstName":
+				options = currentFirstName;
+				break;
+				
+			case "lastName":
+				options = currentLastName;
+				break;
+				
+			case "position":
+				options = currentPosition;
+				break;
+				
+			case "fullName,position":
+				options = currentFirstName + " " + currentLastName + "," + currentPosition;
+				break;
+				
+			default:
+				throw new IllegalArgumentException("Invalid searchType type, " + "\""+ searchType + "\".");
+				
+			}
+			
+			boolean isManagerBoolean;
+			boolean checkManager = true;
+			
+			switch (isManager) {
+			
+			case "true":
+				isManagerBoolean = true;
+				break;
+				
+			case "false":
+				isManagerBoolean = false;
+				break;
+				
+			case "null":
+				isManagerBoolean = false;
+				checkManager = false;
+				break;
+				
+			default:
+				throw new IllegalArgumentException("Invalid isManager type, " + "\""+ isManager + "\".");
+			
+			}
+			
+			if (checkManager) {
+				
+				if (options.contains(searchQuery) && (currentIsManager == isManagerBoolean)) {
+					searchResults.add(data);
+					if (!matchFound) {//Don't run this every time a match is found, only on the first match found.
+						matchFound = true;
+					}
+				}
+				
+			} else {
+				
+				if (options.contains(searchQuery)) {
+					searchResults.add(data);
+					if (!matchFound) {//Don't run this every time a match is found, only on the first match found.
+						matchFound = true;
+					}
+				}
+				
+			}
+		}
 		
+		//Will only get this far if no match is found.
+		if (!matchFound) {
+			searchResults.add("No Match Found.");
+		}
 		
-		
-		
-		return "";
+		return searchResults;
+	}
+	
+	public ArrayList<String> getEmployee(String data, String isManager) {
+		try {
+			int intData = Integer.parseInt(data);//Check if the passed "all" data is an int.
+				
+			//Convert the single returned id into an ArrayList with only 1 item.
+			ArrayList<String> singleId = new ArrayList<String>();
+			singleId.add(searchDB(intData));//id search does not care about isManager, id is specific enough.
+			return singleId;
+		} catch (NumberFormatException e) {
+			return searchDB(data, isManager, "fullName,position");
+		}
 	}
 	
 }

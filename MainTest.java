@@ -1,17 +1,16 @@
 package com.jambalayasystems.main;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
 /*
  * To do list
  * 
  * * * *Add javadoc stuff to every class and method. ---------> Do this after every method is completed.* * * *
  * 
- * THIS REQUIRES A GENRAL USE METHOD IN COMPANY ACCESS WHICH RETURNS INDIVIDUAL EMPLOYEES (as a string).
- * Finish Master's nameSearch(string name), positionSearch(string position), and getEmployee(int id) methods
- *  * Combine all of these into one advancedSearch(string query, boolean isManager) -> isManager is a "filter".
- * 
  * Create a method to add multiple employees at once. Take input from CSV file. Auto generated ID's or predetermined.
+ * 
+ * Add javadoc for each new method.
  * 
  */
 
@@ -36,6 +35,14 @@ public class MainTest {
 
 		//company.userToDB(company.newUser("Matthew", "Wolfe", "CEO", true), compTB);
 		//company.userToDB(company.newUser("Matt", "Brewer", "Janitor", false), compTB);
+		String isManager = "null";
+		Scanner keyboard = new Scanner(System.in);
+		
+		System.out.print("Enter a search query: ");
+		String searchQuery = keyboard.nextLine();
+		System.out.println(company.getEmployee(searchQuery, isManager, compTB));
+		
+		keyboard.close();
 		
 		DBAccess.disconnect();
 		
