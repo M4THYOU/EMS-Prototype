@@ -24,7 +24,11 @@ public class DBAccess {
 	/**The current database connection*/
 	static Connection conn = null;
 	
+	static String printMsg = "";
 	
+	public static String getPrintMsg() {
+		return printMsg;
+	}
 	
 	
 	//STATIC METHODS
@@ -42,6 +46,12 @@ public class DBAccess {
 		try {
 			String url = "jdbc:sqlite:" + db_file_location;
 			
+			try {
+				Class.forName("org.sqlite.JDBC");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			conn = DriverManager.getConnection(url);
 			System.out.println("Connected to " + url + "\n");
@@ -123,7 +133,10 @@ public class DBAccess {
 		
 		for (String whichCompany:companies) {
 			if (whichCompany.equals(name)) {
-				throw new IllegalArgumentException("A company with that name already exists.");
+				//throw new IllegalArgumentException("A company with that name already exists.");
+				printMsg = "A company with that name already exists.";
+				System.out.println(printMsg);
+				return;
 			}
 		}
 		
@@ -138,11 +151,13 @@ public class DBAccess {
 		
 		try (Statement stmt = conn.createStatement()) {
 			stmt.execute(sql);
-			System.out.println(name + " successfully inserted.\n");
+			printMsg = name + " successfully inserted.\n";
+			System.out.println(printMsg);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
-			System.out.println("No connection found.\n");
+			printMsg = "No connection found.\n";
+			System.out.println(printMsg);
 		}
 		
 	}
