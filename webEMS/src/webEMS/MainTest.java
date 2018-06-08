@@ -21,33 +21,33 @@ public class MainTest {
 
 		
 		//Connection must be made before a new company can be added.
-		String location = "c:\\\\Users\\Matthew\\Desktop\\ems";
+		String location = "C:/Users/Student.A219-16/Desktop/matthew_stuff/sqlite/ems";
 		DBAccess.connect(location);
 		
 		
 		//Create new company or enable update of an existing one.
-		// XXX Master company = new Master("Cartridge of Inc.");
+		Master company = new Master("Cartridge of Inc.");
 
 		
 		//Access company table using this.
-		//CompanyAccess compTB = new CompanyAccess(location, "Cartridge of Inc.");//Authentication?
+		CompanyAccess compTB = new CompanyAccess(location, "Cartridge of Inc.");//Authentication?
 		
-		
+		System.out.println(company.getAllEmployees("all", compTB));
 
 		//company.userToDB(company.newUser("Matthew", "Wolfe", "CEO", true), compTB);
 		//company.userToDB(company.newUser("Matt", "Brewer", "Janitor", false), compTB);
 		
 		
-		//TESTING SEARCH
-		//String isManager = "null";
-		//Scanner keyboard = new Scanner(System.in);
+		/*//TESTING SEARCH
+		String isManager = "null";
+		Scanner keyboard = new Scanner(System.in);
 		
-		//System.out.print("Enter a search query: ");
-		//String searchQuery = keyboard.nextLine();
-		//System.out.println(company.getEmployee(searchQuery, isManager, compTB));
+		System.out.print("Enter a search query: ");
+		String searchQuery = keyboard.nextLine();
+		System.out.println(company.getEmployee(searchQuery, isManager, compTB));
 		
-		//keyboard.close();
-		
+		keyboard.close();
+		*/
 		
 		//compTB.insertUsers("testData.csv"); //For mass insertion of users.
 		

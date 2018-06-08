@@ -43,7 +43,7 @@ public class Master {
 		boolean isNew = true;
 		for (String name:companies) {
 			if (name.equals(company)) {
-				System.out.println("Accessing existing company, [" + company + "].\n");
+				DBAccess.printMsg = "Accessing existing company, [" + company + "].\n";
 				isNew = false;
 			}
 		}
@@ -111,6 +111,10 @@ public class Master {
 	
 	public ArrayList<String> getEmployee(String data, String isManager, CompanyAccess company) {
 		return company.getEmployee(data, isManager);
+	}
+	
+	public ArrayList<String> getAllEmployees(String dataType, CompanyAccess company) {
+		return company.getAllEmployees(dataType);
 	}
 	
 	

@@ -43,7 +43,7 @@ public class CompanyAccess {
 	 * @param company - the name of the company making the connection.
 	 * 
 	 */
-	CompanyAccess(String db_file_location, String company) {
+	public CompanyAccess(String db_file_location, String company) {
 		this.conn = DBAccess.connect(db_file_location, company);
 		
 		//Check if this company actually exists.
@@ -209,7 +209,7 @@ public class CompanyAccess {
 	 * </ul>
 	 * @return The ArrayList of Strings containing the specified data of all users.
 	 */
-	private ArrayList<String> getAllEmployees(String dataType) {
+	ArrayList<String> getAllEmployees(String dataType) {
 		String sql = "SELECT * FROM [" + this.company + "]";
 		
 		ArrayList<String> rows = new ArrayList<String>();

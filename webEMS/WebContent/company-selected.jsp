@@ -1,3 +1,4 @@
+<%@page import="webEMS.Master"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="webEMS.DBAccess"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -18,8 +19,20 @@
 	<title>EMS</title>
 </head>
 <body>
-	<p><% DBAccess.newCompanyTable(companyName); %></p>
-	<p>Submission Message: <% out.println(DBAccess.getPrintMsg()); %></p>
+	<%
+		if (companyName != null) {
+			Master company = new Master(companyName);
+		}
+	%>
+	<p>
+	<%
+		if (companyName != null) {
+			out.println(DBAccess.getPrintMsg());
+		} else {
+			out.println("A company name must be submitted.");
+		}
+	%>
+	</p>
 	<a href="/webEMS/home.jsp">Back to Home</a>
 	
 </body>

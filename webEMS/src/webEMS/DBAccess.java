@@ -78,6 +78,13 @@ public class DBAccess {
 		try {
 			String url = "jdbc:sqlite:" + db_file_location;
 			
+			try {
+				Class.forName("org.sqlite.JDBC");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			conn = DriverManager.getConnection(url);
 			System.out.println("COMPANY ACCESS - [" + company + "] Connected to " + url + "\n");
 			
@@ -127,7 +134,7 @@ public class DBAccess {
 	 * 
 	 * @param name - the String name of the company.
 	 */
-	public static void newCompanyTable(String name) {
+	static void newCompanyTable(String name) {
 		
 		ArrayList<String> companies = DBAccess.getCompanies();
 		

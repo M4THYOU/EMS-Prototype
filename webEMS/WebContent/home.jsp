@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" import="java.util.ArrayList"%>
     
-<% DBAccess.connect("c:\\\\Users\\Matthew\\Desktop\\ems"); %>
+<% DBAccess.connect("c:\\\\Users\\Student.A219-16\\Desktop\\matthew_stuff\\sqlite\\ems"); %>
     
 <!DOCTYPE html>
 <html>
@@ -28,8 +28,11 @@
 	
 	<br>
 	<h2>Current Companies</h2>
-	<% ArrayList<String> companies = DBAccess.getCompanies();
-	   request.setAttribute("companies", companies); %>
+	<%
+		ArrayList<String> companies = DBAccess.getCompanies();
+		request.setAttribute("companies", companies);
+	%>
+	   
 	<!--
 		for (String company:companies) {
 			
@@ -41,8 +44,15 @@
 			out.println("<p>" + company + "</p>");
 		}
 	-->
+
 	<c:forEach items="${companies}" var="company">
-		<p><c:out value="${company}"></c:out></p>
+		
+		<c:url value="company.jsp" var="companyURL">
+			<c:param name="companyName" value="${company}"/>
+		</c:url>
+		
+		<p><a href='/webEMS/<c:out value="${companyURL}"/>'><c:out value="${company}"/></a></p>
+		
 	</c:forEach>
 	
 	
