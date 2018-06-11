@@ -9,8 +9,8 @@
 	String companyName = request.getParameter("companyName");
 	int employeeID = Integer.parseInt(request.getParameter("employeeID"));
 	
-	Master companyMaster = new Master(companyName);
-	webEMS.CompanyAccess companyAccess = new CompanyAccess("c:\\\\Users\\Student.A219-16\\Desktop\\matthew_stuff\\sqlite\\ems", companyName);
+	Master companyMaster = new webEMS.Master(companyName, false);
+	webEMS.CompanyAccess companyAccess = new CompanyAccess("c:\\\\Users\\Matthew\\Desktop\\ems", companyName);
 	
 	ArrayList<String> employeeList = companyMaster.getEmployee(Integer.toString(employeeID), "null", companyAccess);
 	String currentEmployee = employeeList.get(0);

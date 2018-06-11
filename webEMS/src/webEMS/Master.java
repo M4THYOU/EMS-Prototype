@@ -37,7 +37,7 @@ public class Master {
 	 * 
 	 * @param company - a string representing the company name.
 	 */
-	public Master(String company){
+	public Master(String company, boolean addNew){
 		ArrayList<String> companies = DBAccess.getCompanies();
 		
 		boolean isNew = true;
@@ -48,10 +48,14 @@ public class Master {
 			}
 		}
 		
-		if (isNew) {//Add to database.
+		if (isNew && addNew) {//Add to database.
 			DBAccess.newCompanyTable(company);
 		}
 		
+		if (isNew && !addNew) {
+			DBAccess.printMsg = "[" + company + "] not found.\n";
+			return;
+		}
 		
 		this.employees = DBAccess.countEmployees(company);
 		this.company = company;

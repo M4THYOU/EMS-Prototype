@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" import="java.util.ArrayList"%>
     
-<% DBAccess.connect("c:\\\\Users\\Student.A219-16\\Desktop\\matthew_stuff\\sqlite\\ems"); %>
+<% DBAccess.connect("c:\\\\Users\\Matthew\\Desktop\\ems"); %>
     
 <!DOCTYPE html>
 <html>

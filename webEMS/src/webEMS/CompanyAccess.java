@@ -1,20 +1,16 @@
 package webEMS;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import javafx.scene.shape.Line;
 
 /**Represents an individual company's access to their table in the database.
  * 
@@ -153,6 +149,89 @@ public class CompanyAccess {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	//Keep trying to run this. Update the status every time. Either return the whole message to display, or indicate which to display
+	//and generate the message in jsp file.
+	//CREATE NEW METHOD TO INTERPRET STATUSES!!!
+	public String insertUserWeb(int id, String firstName, String lastName, String position, int isManager, String confirmation) {
+		String sql = "INSERT INTO [" + this.company + "](id, firstName, lastName, position, isManager) VALUES(?,?,?,?,?)";
+		String returnStatus = "g";
+		boolean execute = true;
+		
+		ArrayList<String> data = getAllEmployees("fullName,position");
+		
+		for (String user:data) {
+			String[] nameAndPosition = user.split(",");
+			String existingName = nameAndPosition[0];
+			String existingPosition = nameAndPosition[1];
+			
+			String newName = firstName + " " + lastName;
+			String newPosition = position;
+			
+			if (newName.equals(existingName)) {
+				
+				if (newPosition.equals(existingPosition)) {
+					returnStatus = "s-fn,ln,po";
+					execute = false;
+				} else {
+					returnStatus = "s-fn,ln";
+					execute = false;
+				}
+				
+				if (confirmation.equals("confirmed")) {
+					returnStatus = "g";
+					execute = true;
+				} else if (confirmation.equals("cancelled")) {
+					returnStatus = "c";
+					execute = false;
+				}
+			}
+		}
+		
+		if (execute) {
+			try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
+			
+				pstmt.setInt(1, id);
+				pstmt.setString(2, firstName);
+				pstmt.setString(3, lastName);
+				pstmt.setString(4, position);
+				pstmt.setInt(5, isManager);
+				pstmt.executeUpdate();
+				System.out.println(firstName + " " + lastName + " added to [" + this.company + "].\n");
+			
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return returnStatus;
+	}
+	
+	//s: same
+	//c: cancelled
+	//g: go ahead/confirmed
+	//fn: firstName
+	//ln: lastName
+	//po: position
+	public String checkStatus(String status) {
+		String message = "";
+		
+		if (status.equals("s-fn,ln,po")) {
+			message = "An employee with the same first name, last name, and position already exists.\n"
+					+ "Are you sure you want to add another?";
+		} else if (status.equals("s-fn,ln")) {
+			message = "WARNING - An employee with the same first and last name already exists.\n"
+					+ "Are you sure you want to continue?";
+		} else if (status.equals("c")) {
+			message = "Employee not added.\n";
+		} else if (status.equals("g")) {
+			message = "Employee successfully added";
+		} else {
+			message = "Invalid input.\n";
+		}
+		
+		return message;
 	}
 	
 	//THIS SHOULD AUTO GENERATE IDS

@@ -19,14 +19,10 @@
 	<title>EMS</title>
 </head>
 <body>
-	<%
-		if (companyName != null) {
-			Master company = new Master(companyName);
-		}
-	%>
 	<p>
 	<%
 		if (companyName != null) {
+			Master company = new Master(companyName, true);
 			out.println(DBAccess.getPrintMsg());
 		} else {
 			out.println("A company name must be submitted.");

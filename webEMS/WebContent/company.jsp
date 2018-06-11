@@ -7,10 +7,10 @@
 
 <%
 	String companyName = request.getParameter("companyName");
-	Master companyMaster = new Master(companyName);
-	webEMS.CompanyAccess companyAccess = new CompanyAccess("c:\\\\Users\\Student.A219-16\\Desktop\\matthew_stuff\\sqlite\\ems", companyName);
+	Master companyMaster = new Master(companyName, false);
+	webEMS.CompanyAccess companyAccess = new CompanyAccess("c:\\\\Users\\Matthew\\Desktop\\ems", companyName);
 	
-	request.setAttribute("companyName", companyName);
+	session.setAttribute("companyName", companyName);
 %>
 
 <!DOCTYPE html>
@@ -34,7 +34,7 @@
 		<p>Employee First Name: <input type="text" name="firstName" required></p>
 		<p>Employee Last Name: <input type="text" name="lastName" required></p>
 		<p>Employee Position: <input type="text" name="position" required></p>
-		<p>Manager: <input type="checkbox" name="isManager" required></p>
+		<p>Manager: <input type="checkbox" name="isManager"></p>
 		<input type="submit" value="Submit">
 	</form>
 	
@@ -55,11 +55,7 @@
 			
 		}
 		
-		if (!employees.isEmpty()) {
-			for (String employee:employees) {
-				out.println("<p>" + employee + "</p>");
-			}
-		} else {
+		if (employees.isEmpty()) {
 			out.println("<p>No employees found.</p>");
 		}
 		

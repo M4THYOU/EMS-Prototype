@@ -21,18 +21,19 @@ public class MainTest {
 
 		
 		//Connection must be made before a new company can be added.
-		String location = "C:/Users/Student.A219-16/Desktop/matthew_stuff/sqlite/ems";
+		String location = "c:\\\\Users\\Matthew\\Desktop\\ems";
 		DBAccess.connect(location);
 		
 		
 		//Create new company or enable update of an existing one.
-		Master company = new Master("Cartridge of Inc.");
-
+		//Master company = new Master("Cartridge of Inc.", false);
 		
 		//Access company table using this.
 		CompanyAccess compTB = new CompanyAccess(location, "Cartridge of Inc.");//Authentication?
+		//System.out.println(compTB.checkStatus(compTB.insertUserWeb(id, firstName, lastName, position, isManager, confirmation)));
+		System.out.println("QUERY: " + compTB.checkStatus(compTB.insertUserWeb(1, "Matt", "Brewer", "CFO", 1, "null")));
 		
-		System.out.println(company.getAllEmployees("all", compTB));
+		//System.out.println(company.getAllEmployees("all", compTB));
 
 		//company.userToDB(company.newUser("Matthew", "Wolfe", "CEO", true), compTB);
 		//company.userToDB(company.newUser("Matt", "Brewer", "Janitor", false), compTB);
