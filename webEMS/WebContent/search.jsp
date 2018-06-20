@@ -6,12 +6,19 @@
     pageEncoding="ISO-8859-1" import="java.util.ArrayList"%>
 
 <%
-	String companyName = request.getParameter("companyName");
+	String companyName = (String) session.getAttribute("companyName");
 	Master companyMaster = new Master(companyName, false);
 	webEMS.CompanyAccess companyAccess = new CompanyAccess("c:\\\\Users\\Student.A219-16\\Desktop\\matthew_stuff\\sqlite\\ems", companyName);
 	
-	session.setAttribute("companyName", companyName);
-	session.setAttribute("status", "null");
+	String query = request.getParameter("query");
+	String isManager = request.getParameter("isManager");
+	
+	String checkedIsManager;
+	if (isManager.equals("null") || isManager.equals("true") || isManager.equals("false")) {
+		checkedIsManager = isManager;
+	} else {
+		checkedIsManager = "null";
+	}
 %>
 
 <!DOCTYPE html>
@@ -47,23 +54,14 @@
 <div class="content">
 	
 	<a href="/webEMS/home.jsp">Back to Home</a>
-	
-	<h2>Enter a new Employee</h2>
-	<form action="/webEMS/new-employee.jsp">
-		<p>Employee First Name: <input type="text" name="firstName" required></p>
-		<p>Employee Last Name: <input type="text" name="lastName" required></p>
-		<p>Employee Position: <input type="text" name="position" required></p>
-		<p>Manager: <input type="checkbox" name="isManager"></p>
-		<input type="submit" value="Submit">
-	</form>
-	
 	<br><br>
-	<h2>Employees at <%= companyName %></h2>
+	<button type="button" name="back" onclick="history.back()">Back</button>
 	
-	<p class="name-position" id="title"><span class="name">Name</span><span class="position">Position</span></p>
+	<h2>Search results for "<%= query %>"</h2>
 	
 	<%
-		ArrayList<String> employees = companyMaster.getAllEmployees("all", companyAccess);
+		ArrayList<String> employees = companyMaster.getEmployee(query, checkedIsManager, companyAccess);
+		out.println("<p>" + employees.size() + " employees found.</p>");
 		String switcher = "two";
 		for (String employee:employees) {
 			

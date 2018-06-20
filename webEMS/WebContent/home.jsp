@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" import="java.util.ArrayList"%>
     
-<% DBAccess.connect("c:\\\\Users\\Matthew\\Desktop\\ems"); %>
+<% DBAccess.connect("c:\\\\Users\\Student.A219-16\\Desktop\\matthew_stuff\\sqlite\\ems"); %>
     
 <!DOCTYPE html>
 <html>
@@ -18,7 +18,12 @@
 	<title>EMS</title>
 </head>
 <body>
-	<h1>Welcome to the Employee Management System!</h1>
+<div class="header">
+	<div class="img-container">
+		<img src="img/logo.png" height="100%" width="100%">
+	</div>
+</div>
+<div class="content">
 	
 	<h2>Enter a new Company</h2>
 	<form action="/webEMS/company-selected.jsp">
@@ -32,18 +37,6 @@
 		ArrayList<String> companies = DBAccess.getCompanies();
 		request.setAttribute("companies", companies);
 	%>
-	   
-	<!--
-		for (String company:companies) {
-			
-			<c:url value="company.jsp" var="companyURL">
-				<c:param name="companyName" value="My Test Company"/>
-			</c:url>
-			<p>Click <a href="<c:out value='${companyURL}'/>">here</a> to view the it.</p>
-			
-			out.println("<p>" + company + "</p>");
-		}
-	-->
 
 	<c:forEach items="${companies}" var="company">
 		
@@ -55,6 +48,6 @@
 		
 	</c:forEach>
 	
-	
+</div>
 </body>
 </html>

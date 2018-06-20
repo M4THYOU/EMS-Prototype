@@ -154,10 +154,20 @@ public class CompanyAccess {
 	//Keep trying to run this. Update the status every time. Either return the whole message to display, or indicate which to display
 	//and generate the message in jsp file.
 	//CREATE NEW METHOD TO INTERPRET STATUSES!!!
-	public String insertUserWeb(int id, String firstName, String lastName, String position, int isManager, String confirmation) {
+	public String insertUserWeb(int id, String firstName, String lastName, String position, boolean isManager, String confirmation) {
 		String sql = "INSERT INTO [" + this.company + "](id, firstName, lastName, position, isManager) VALUES(?,?,?,?,?)";
 		String returnStatus = "g";
 		boolean execute = true;
+		
+		
+		//Get numerical value of isManager
+		int manager;
+		if (isManager) {
+			manager = 1;//if they ARE a manager
+		} else {
+			manager = 0;//if they ARE NOT a manager
+		}
+		
 		
 		ArrayList<String> data = getAllEmployees("fullName,position");
 		
@@ -196,7 +206,7 @@ public class CompanyAccess {
 				pstmt.setString(2, firstName);
 				pstmt.setString(3, lastName);
 				pstmt.setString(4, position);
-				pstmt.setInt(5, isManager);
+				pstmt.setInt(5, manager);
 				pstmt.executeUpdate();
 				System.out.println(firstName + " " + lastName + " added to [" + this.company + "].\n");
 			
@@ -215,6 +225,25 @@ public class CompanyAccess {
 	//ln: lastName
 	//po: position
 	public String checkStatus(String status) {
+		String newStatus = "";
+		
+		if (status.equals("s-fn,ln,po")) {
+			newStatus = status;
+		} else if (status.equals("s-fn,ln")) {
+			newStatus = status;
+		} else if (status.equals("c")) {
+			newStatus = "cancelled";
+		} else if (status.equals("g")) {
+			newStatus = "confirmed";
+		} else {
+			newStatus = "Invalid input.\n";
+		}
+		
+		return newStatus;
+	}
+	
+	//Generate message to print on screen based on the return String of checkStatus
+	public String insertionMessage(String status) {
 		String message = "";
 		
 		if (status.equals("s-fn,ln,po")) {
@@ -223,9 +252,9 @@ public class CompanyAccess {
 		} else if (status.equals("s-fn,ln")) {
 			message = "WARNING - An employee with the same first and last name already exists.\n"
 					+ "Are you sure you want to continue?";
-		} else if (status.equals("c")) {
+		} else if (status.equals("cancelled")) {
 			message = "Employee not added.\n";
-		} else if (status.equals("g")) {
+		} else if (status.equals("confirmed")) {
 			message = "Employee successfully added";
 		} else {
 			message = "Invalid input.\n";

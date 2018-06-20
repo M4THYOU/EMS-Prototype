@@ -83,8 +83,6 @@ public class Master {
 			isManager
 		);
 		
-		this.employees++;
-		
 		return newEmp;
 	}
 	
@@ -111,6 +109,10 @@ public class Master {
 	 */
 	public void userToDB(Employee user, CompanyAccess company) {
 		company.insertUser(user.employeeId, user.firstName, user.lastName, user.position, user.isManager);
+	}
+	
+	public String userToDBWeb(Employee user, String confirmation, CompanyAccess company) {
+		return company.insertUserWeb(user.employeeId, user.firstName, user.lastName, user.position, user.isManager, confirmation);
 	}
 	
 	public ArrayList<String> getEmployee(String data, String isManager, CompanyAccess company) {

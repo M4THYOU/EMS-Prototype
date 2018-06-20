@@ -21,18 +21,37 @@ public class MainTest {
 
 		
 		//Connection must be made before a new company can be added.
-		String location = "c:\\\\Users\\Matthew\\Desktop\\ems";
+		String location = "c:\\\\\\\\Users\\\\Student.A219-16\\\\Desktop\\\\matthew_stuff\\\\sqlite\\\\ems";
 		DBAccess.connect(location);
 		
 		
 		//Create new company or enable update of an existing one.
-		//Master company = new Master("Cartridge of Inc.", false);
-		
+		Master company = new Master("test", false);
+		//System.out.println(company.employeeCount());
 		//Access company table using this.
-		CompanyAccess compTB = new CompanyAccess(location, "Cartridge of Inc.");//Authentication?
+		CompanyAccess compTB = new CompanyAccess(location, company.getName());//Authentication?
 		//System.out.println(compTB.checkStatus(compTB.insertUserWeb(id, firstName, lastName, position, isManager, confirmation)));
-		System.out.println("QUERY: " + compTB.checkStatus(compTB.insertUserWeb(1, "Matt", "Brewer", "CFO", 1, "null")));
+
+		String initialStatus = company.userToDBWeb(company.newUser("Matthew", "Wolfe", "CEO", true), "null", compTB);
+		String checkedStatus = compTB.checkStatus(initialStatus);
+		String newStatus = compTB.insertionMessage(checkedStatus);
+		System.out.println("INITIAL STATUS: " + initialStatus);
+		System.out.println("CHECKED STATUS: " + checkedStatus);
+		System.out.println("NEW STATUS: " + newStatus + "\n\n");
 		
+		Scanner keyboard = new Scanner(System.in);
+		System.out.println("What would you like to do? \"confirmed\" OR \"cancelled\": ");
+		String response = keyboard.nextLine();
+		System.out.println("\n");
+		
+		String initialStatus2 = company.userToDBWeb(company.newUser("Matthew", "Wolfe", "CEO", true), response, compTB);
+		String checkedStatus2 = compTB.checkStatus(initialStatus2);
+		String newStatus2 = compTB.insertionMessage(checkedStatus2);
+		System.out.println("INITIAL STATUS: " + initialStatus2);
+		System.out.println("CHECKED STATUS: " + checkedStatus2);
+		System.out.println("NEW STATUS: " + newStatus2 + "\n\n");
+		keyboard.close();
+
 		//System.out.println(company.getAllEmployees("all", compTB));
 
 		//company.userToDB(company.newUser("Matthew", "Wolfe", "CEO", true), compTB);

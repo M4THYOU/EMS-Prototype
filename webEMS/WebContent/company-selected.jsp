@@ -19,6 +19,12 @@
 	<title>EMS</title>
 </head>
 <body>
+<div class="header">
+	<div class="img-container">
+		<img src="img/logo.png" height="100%" width="100%">
+	</div>
+</div>
+<div class="content">
 	<p>
 	<%
 		if (companyName != null) {
@@ -31,5 +37,6 @@
 	</p>
 	<a href="/webEMS/home.jsp">Back to Home</a>
 	
+</div>
 </body>
 </html>

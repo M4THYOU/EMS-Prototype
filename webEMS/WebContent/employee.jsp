@@ -10,7 +10,7 @@
 	int employeeID = Integer.parseInt(request.getParameter("employeeID"));
 	
 	Master companyMaster = new webEMS.Master(companyName, false);
-	webEMS.CompanyAccess companyAccess = new CompanyAccess("c:\\\\Users\\Matthew\\Desktop\\ems", companyName);
+	webEMS.CompanyAccess companyAccess = new CompanyAccess("c:\\\\Users\\Student.A219-16\\Desktop\\matthew_stuff\\sqlite\\ems", companyName);
 	
 	ArrayList<String> employeeList = companyMaster.getEmployee(Integer.toString(employeeID), "null", companyAccess);
 	String currentEmployee = employeeList.get(0);
@@ -34,13 +34,30 @@
 	<title>EMS</title>
 </head>
 <body>
-	<h1><%= name %></h1>
+<div class="header">
+	<div class="img-container">
+		<img src="img/logo.png" height="100%" width="100%">
+	</div>
+	<h1><%= companyName %> - <%= name %></h1>
 	
-	<button type="button" name="back" onclick="history.back()">Back</button>
+	<form action="/webEMS/search.jsp" class="search-form">
+		<input type="text" placeholder="Employee ID or position/name" name="query">
+		<select name="isManager">
+			<option value="null">---</option>
+			<option value="true">Manager</option>
+			<option value="false">Not a Manager</option>
+		</select>
+		<input type="submit" value="Find" id="find">
+	</form>
 	
-	<p><strong>Company:</strong> <%= companyName %></p>
+</div>
+<div class="content">
+	
 	<p><strong>Position:</strong> <%= position %></p>
 	<p><strong>Is a manager:</strong> <%= isManager %></p>
 	
+	<button type="button" name="back" onclick="history.back()">Back</button>
+
+</div>
 </body>
 </html>
